@@ -135,13 +135,13 @@ def normalize_rtl_label(values, feature, parent):
         elif bidi in ('L', 'LRE', 'LRO'):
             dir_flag = 'LTR'
         if dir_flag != current_dir:
-            if current_text: 
+            if current_text:
                 runs.append((current_text, current_dir))
             current_text = ch
             current_dir = dir_flag
-        else: 
+        else:
             current_text += ch
-    if current_text: 
+    if current_text:
         runs.append((current_text, current_dir))
 
     reversed_runs = []
@@ -167,7 +167,7 @@ def normalize_rtl_label(values, feature, parent):
             final_runs.extend(reversed(temp_group))
             temp_group.clear()
     for text, direction in reversed_runs:
-        if direction in ('RTL', 'Neutral'): 
+        if direction in ('RTL', 'Neutral'):
             temp_group.append((text, direction))
         else:
             flush_group()
