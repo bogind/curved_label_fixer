@@ -5,8 +5,9 @@
 [general]
 name=Curved RTL Label Fixer
 qgisMinimumVersion=3.34
+qgisMaximumVersion=4.99
 description=Fix rendering of RTL labels on curved lines
-version=0.3.1
+version=0.3.2
 author=Dror Bogin
 email=dror.bogin@gmail.com
 
@@ -23,6 +24,8 @@ repository=https://github.com/bogind/curved_label_fixer
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 changelog=
+    2026-07-08 Version 0.3.2
+        - updated metadata to allow running in QGIS 4.x with QT6 (plugin was already compatible)
     2026-02-25 Version 0.3.1
         - Bug fixes:
             - Fixed the issue with QT6 users getting an error for the success message bar.
