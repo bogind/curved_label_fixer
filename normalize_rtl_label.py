@@ -89,16 +89,12 @@ def normalize_rtl_label(values, feature, parent):
                 continue
 
             # Connection logic matching your successful terminal test
-            conn_prev = (
-                i > 0
-                and chars[i - 1] in arabic_forms
-                and chars[i - 1] not in right_only
-            )
-            conn_next = (
-                i < len(chars) - 1
-                and chars[i + 1] in arabic_forms
-                and ch not in right_only
-            )
+            prev_char = chars[i - 1] if i > 0 else None
+            next_char = chars[i + 1] if i < len(chars) - 1 else None
+            prev_connected = prev_char in arabic_forms
+            next_connected = next_char in arabic_forms
+            conn_prev = prev_connected and prev_char not in right_only
+            conn_next = next_connected and ch not in right_only
 
             if conn_prev and conn_next:
                 idx = 3  # medial
@@ -114,16 +110,16 @@ def normalize_rtl_label(values, feature, parent):
 
     # Keep the rest of your directional run and
     # reversing logic from normalize_rtl_label.py
-    rtl_punctuation_map = str.maketrans(
-        {'(': ')',
-         ')': '(',
-         '[': ']',
-         ']': '[',
-         '{': '}',
-         '}': '{',
-         '<': '>',
-         '>': '<'}
-        )
+    rtl_punctuation_map = str.maketrans({
+        '(': ')',
+        ')': '(',
+        '[': ']',
+        ']': '[',
+        '{': '}',
+        '}': '{',
+        '<': '>',
+        '>': '<'
+    })
     runs = []
     current_dir = None
     current_text = ''
@@ -144,17 +140,23 @@ def normalize_rtl_label(values, feature, parent):
     if current_text:
         runs.append((current_text, current_dir))
 
+    def is_arabic_char(ch):
+        return any([
+            '\u0600' <= ch <= '\u06FF',
+            '\u0750' <= ch <= '\u077F',
+            '\u08A0' <= ch <= '\u08FF'
+        ])
+
     reversed_runs = []
     for text, direction in runs:
         if direction == 'RTL':
-            has_arabic = any('\u0600' <= ch <= '\u06FF' or
-                             '\u0750' <= ch <= '\u077F' or
-                             '\u08A0' <= ch <= '\u08FF' for ch in text)
-            adjusted_text = reshape_arabic(text)[::-1].translate(
-                rtl_punctuation_map
-                ) if has_arabic else text[::-1].translate(
+            has_arabic = any(is_arabic_char(ch) for ch in text)
+            if has_arabic:
+                adjusted_text = reshape_arabic(text)[::-1].translate(
                     rtl_punctuation_map
-                    )
+                )
+            else:
+                adjusted_text = text[::-1].translate(rtl_punctuation_map)
             reversed_runs.append((adjusted_text, direction))
         else:
             reversed_runs.append((text, direction))

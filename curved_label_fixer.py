@@ -239,14 +239,15 @@ class CurvedLabelFixer:
         try:
             if "normalize_rtl_label" in [
                 f.name() for f in QgsExpression.Functions()
-                    ]:
+            ]:
                 QgsExpression.unregisterFunction("normalize_rtl_label")
         except Exception as e:
             self.iface.messageBar().pushMessage(
-                            "Error",
-                            f"Failed to unregister function: {e}",
-                            level=Qgis.Critical, duration=5
-                            )
+                "Error",
+                f"Failed to unregister function: {e}",
+                level=Qgis.Critical,
+                duration=5
+            )
 
     def reset_rtl_normalization(self):
         layers = QgsProject.instance().mapLayers().values()
