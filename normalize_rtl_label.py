@@ -68,6 +68,11 @@ def normalize_rtl_label(values, feature, parent):
         # Right-connecting only (represented by visual Heh forms)
         '\u06D5': ['\uFEE9', '\uFEEA', '\uFEE9', '\uFEEA'],
 
+        # Persian letters
+        '\u0698': ['\uFB8A', '\uFB8B', '\uFB8A', '\uFB8B'],  # Jeh (ژ)
+        '\u06A9': ['\uFB8E', '\uFB8F', '\uFB90', '\uFB91'],  # Keheh (ک)
+        '\u06AF': ['\uFB92', '\uFB93', '\uFB94', '\uFB95'],  # Gaf (گ)
+
         # Farsi/Kurdish Yeh (ی): Dotless in all positions
         '\u06CC': ['\uFBFC', '\uFBFD', '\uFBFE', '\uFBFF'],
     }
@@ -76,7 +81,7 @@ def normalize_rtl_label(values, feature, parent):
     right_only = {
         '\u0621', '\u0622', '\u0623', '\u0624', '\u0625', '\u0627',
         '\u062F', '\u0630', '\u0631', '\u0632', '\u0648', '\u0649',
-        '\u0695', '\u06C6', '\u06D5'
+        '\u0695', '\u06C6', '\u06D5', '\u0698'
     }
 
     def reshape_arabic(text):
