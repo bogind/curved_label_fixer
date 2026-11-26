@@ -1,4 +1,5 @@
 from qgis.core import qgsfunction
+import re
 import unicodedata
 
 
@@ -148,7 +149,7 @@ def normalize_rtl_label(values, feature, parent):
         ])
 
     reversed_runs = []
-    for text, direction in runs:
+    for i, (text, direction) in enumerate(runs):
         if direction == 'RTL':
             has_arabic = any(is_arabic_char(ch) for ch in text)
             if has_arabic:
@@ -158,6 +159,13 @@ def normalize_rtl_label(values, feature, parent):
             else:
                 adjusted_text = text[::-1].translate(rtl_punctuation_map)
             reversed_runs.append((adjusted_text, direction))
+        elif direction == 'Neutral' and 'RTL' in (
+                runs[i - 1][1] if i > 0 else None,
+                runs[i + 1][1] if i < len(runs) - 1 else None):
+            # Reverse symbols next to RTL text, keeping numbers intact
+            reversed_runs.append((re.sub(
+                r'\d+(?:[.,:]\d+)*', lambda m: m.group()[::-1], text[::-1]
+            ), direction))
         else:
             reversed_runs.append((text, direction))
 
